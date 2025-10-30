@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '../config/supaBaseClient.js';
+import { supabaseAdmin } from '../config/supabaseClient.js';
 
 export const listMyEnrollments = async (req, res) => {
   const uid = req.auth.profile?.id;
