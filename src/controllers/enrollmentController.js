@@ -15,7 +15,7 @@ export const listMyEnrollments = async (req, res) => {
     .eq("user_id", uid);
 
   if (error) {
-    console.error("❌ Error listando cursos:", error.message);
+    console.error("Error listando cursos:", error.message);
     return res.status(500).json({ error: error.message });
   }
 
@@ -50,7 +50,7 @@ export const enrollToCourse = async (req, res) => {
     .single();
 
   if (error) {
-    console.error("❌ Error al inscribir:", error.message);
+    console.error("Error al inscribir:", error.message);
     return res.status(500).json({ error: error.message });
   }
 

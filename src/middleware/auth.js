@@ -2,8 +2,7 @@
 import { supabaseAdmin } from "../config/supabaseClient.js";
 
 
-//Middleware principal que verifica el token enviado en Authorization: Bearer <token>
-
+//Se verifica el token enviado 
  
 export const requireAuth = async (req, res, next) => {
   try {
@@ -15,15 +14,15 @@ export const requireAuth = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    //Verificar el token con Supabase (usa la instancia de servicio con privilegios)
+    //Verificar el token con Supabase 
     const { data, error } = await supabaseAdmin.auth.getUser(token);
 
     if (error || !data?.user) {
-      console.warn("⚠️ Token inválido o expirado:", error?.message);
+      console.warn("Token inválido o expirado:", error?.message);
       return res.status(401).json({ message: "Token inválido o expirado" });
     }
 
-    // Guardamos los datos básicos del usuario
+    // Se guardan los datos del usuario 
     const user = data.user;
 
     //Obtener su perfil completo desde tu tabla 'users'
@@ -37,7 +36,7 @@ export const requireAuth = async (req, res, next) => {
       console.warn("No se encontró perfil en tabla users:", profileError.message);
     }
 
-    //Guardamos la info en req.auth (accesible para controladores)
+    //Guardamos la info en req.auth 
     req.auth = { user, profile };
 
     next();
@@ -48,7 +47,7 @@ export const requireAuth = async (req, res, next) => {
 };
 
 
- //Middleware para verificar roles (admin, instructor, client, etc.)
+ //Donde se verifican roles (admin, instructor, client, etc.)
 
 export const requireRole = (allowedRoles = []) => {
   return (req, res, next) => {

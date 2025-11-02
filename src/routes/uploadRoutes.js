@@ -31,7 +31,7 @@ router.post("/", upload.single("file"), async (req, res) => {
       .from("onlearn_uploads")
       .upload(fileName, file.buffer, {
         contentType: file.mimetype || "application/octet-stream",
-        upsert: true, // sobrescribe si existe (seguro)
+        upsert: true, 
       });
 
     if (uploadError) {

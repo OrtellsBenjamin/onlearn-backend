@@ -96,27 +96,31 @@ export const approveCourse = async (req, res) => {
   }
 };
 
-//Rechazar curso (admin → vuelve a 'draft')
+
  
+// Rechazar curso 
 export const rejectCourse = async (req, res) => {
   const { id } = req.params;
   try {
-    const { data, error } = await supabaseAdmin
+    // Primero eliminamos las lecciones e inscripciones asociadas
+    await supabaseAdmin.from("course_lessons").delete().eq("course_id", id);
+    await supabaseAdmin.from("enrollments").delete().eq("course_id", id);
+
+    // Luego eliminamos el curso
+    const { error: delErr } = await supabaseAdmin
       .from("courses")
-      .update({ status: "draft" })
-      .eq("id", id)
-      .select("*")
-      .single();
+      .delete()
+      .eq("id", id);
 
-    if (error) throw error;
-    if (!data) return res.status(404).json({ error: "Curso no encontrado." });
+    if (delErr) throw delErr;
 
-    res.json({ message: "Curso rechazado y enviado a borrador.", data });
+    res.json({ message: "Curso rechazado y eliminado correctamente." });
   } catch (err) {
     console.error("Error al rechazar curso:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Eliminar curso (admin o instructor dueño)
  
