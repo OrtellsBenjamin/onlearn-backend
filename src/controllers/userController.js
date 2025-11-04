@@ -1,7 +1,4 @@
 import { supabaseAdmin } from "../config/supabaseClient.js";
-
-
-// Listar todos los usuarios (vista general para admin)
  
 export const listUsers = async (req, res) => {
   try {
@@ -83,3 +80,23 @@ export const rejectTeacher = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// 🔥 Eliminar usuario (solo admin)
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Eliminar inscripciones, cursos y perfiles relacionados
+    await supabaseAdmin.from("enrollments").delete().eq("user_id", id);
+    await supabaseAdmin.from("courses").delete().eq("owner", id);
+
+    const { error } = await supabaseAdmin.from("profiles").delete().eq("id", id);
+    if (error) throw error;
+
+    res.json({ message: "Usuario eliminado correctamente." });
+  } catch (err) {
+    console.error("❌ Error al eliminar usuario:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
