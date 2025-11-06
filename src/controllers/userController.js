@@ -11,7 +11,7 @@ export const listUsers = async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    console.error("❌ Error al listar usuarios:", err.message);
+    console.error("Error al listar usuarios:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -30,7 +30,7 @@ export const getPendingTeachers = async (req, res) => {
 
     res.json(data);
   } catch (err) {
-    console.error("❌ Error al obtener profesores pendientes:", err.message);
+    console.error("Error al obtener profesores pendientes:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
@@ -74,14 +74,14 @@ export const rejectTeacher = async (req, res) => {
 
     if (error) throw error;
 
-    res.json({ message: "🚫 Solicitud rechazada", data });
+    res.json({ message: "Solicitud rechazada", data });
   } catch (err) {
     
     res.status(500).json({ error: err.message });
   }
 };
 
-// 🔥 Eliminar usuario (solo admin)
+//Eliminar usuario (solo admin)
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
@@ -95,7 +95,7 @@ export const deleteUser = async (req, res) => {
 
     res.json({ message: "Usuario eliminado correctamente." });
   } catch (err) {
-    console.error("❌ Error al eliminar usuario:", err.message);
+    console.error("Error al eliminar usuario:", err.message);
     res.status(500).json({ error: err.message });
   }
 };

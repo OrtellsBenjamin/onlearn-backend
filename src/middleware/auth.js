@@ -41,7 +41,7 @@ export const requireAuth = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.error("💥 Error en requireAuth:", err);
+    console.error("Error en requireAuth:", err);
     res.status(500).json({ message: "Error interno en autenticación" });
   }
 };
