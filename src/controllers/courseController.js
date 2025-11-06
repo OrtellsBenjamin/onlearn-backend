@@ -123,9 +123,10 @@ export const rejectCourse = async (req, res) => {
 export const deleteCourse = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = req.user; // viene del middleware requireAuth
+    const user = req.auth?.user;
+    const role = req.auth?.profile?.role;
 
-    // 1️⃣ Verificar si el curso existe
+    //Verificar si el curso existe
     const { data: course, error: fetchErr } = await supabaseAdmin
       .from("courses")
       .select("id, owner")
@@ -135,12 +136,12 @@ export const deleteCourse = async (req, res) => {
     if (fetchErr) throw fetchErr;
     if (!course) return res.status(404).json({ error: "Curso no encontrado." });
 
-    //Validar permisos (admin o instructor dueño)
-    if (user.role !== "admin" && course.owner !== user.id) {
+    //Validar permisos
+    if (role !== "admin" && course.owner !== user.id) {
       return res.status(403).json({ error: "No autorizado para eliminar este curso." });
     }
 
-    //Eliminar primero las lecciones asociadas
+    //Eliminar las lecciones asociadas
     const { error: lessonsErr } = await supabaseAdmin
       .from("course_lessons")
       .delete()
@@ -156,7 +157,7 @@ export const deleteCourse = async (req, res) => {
 
     res.json({ message: "Curso eliminado correctamente." });
   } catch (err) {
-    console.error("Error al eliminar curso:", err.message);
+    console.error("❌ Error al eliminar curso:", err.message);
     res.status(500).json({ error: err.message });
   }
 };
